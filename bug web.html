@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SATRIA V12</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet"/>
+<style>
+  /* Reset */
+  * { box-sizing: border-box; }
+  body,html {
+    margin:0; padding:0;
+    font-family: 'Orbitron', monospace, sans-serif;
+    background: radial-gradient(circle at center, #1b0031 0%, #0c0016 80%);
+    color: #bb99ff;
+    min-height: 100vh;
+    display:flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  a { color:#ccbbff; text-decoration:none; }
+  a:hover { color:#ddb1ff; }
+
+  /* Common styles */
+  input, select, button {
+    font-family: 'Orbitron', monospace, sans-serif;
+  }
+  ::placeholder { color: #967eccbb; }
+
+  /* Login page */
+  #loginPage {
+    max-width: 360px;
+    background: #300059cc;
+    border-radius: 20px;
+    padding: 3rem 2rem 3rem;
+    box-shadow: inset 0 0 40px #a880ffcc;
+    text-align: center;
+    user-select:none;
+  }
+  #loginPage img.avatar {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 3px solid #c9aaff;
+    box-shadow: 0 0 28px #cdbaff;
+    margin-bottom: 18px;
+    object-fit: cover;
+  }
+  #loginPage h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+  }
+  #loginPage p.subtitle {
+    color: #ac91bfcc;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  #loginPage input {
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: 18px;
+    border-radius: 36px;
+    border: none;
+    background: #5119a2cc;
+    color: #d9c9ff;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: inset 0 0 18px #b49affaa;
+  }
+  #loginPage input:focus {
+    outline: none;
+    box-shadow: inset 0 0 36px #d7a5ffcc;
+  }
+  #loginPage button {
+    width: 100%;
+    padding: 16px 0;
+    margin-bottom: 10px;
+    border-radius: 36px;
+    border: none;
+    background: linear-gradient(90deg, #7e55ff, #c886ff);
+    color: #35004d;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    box-shadow: 0 0 40px #dda7ff;
+    transition: background 0.3s ease;
+  }
+  #loginPage button:hover {
+    background: linear-gradient(90deg, #c886ff, #7e55ff);
+  }
+  #loginPage button#buyKey {
+    background: #4200a3;
+    box-shadow: inset 0 0 25px #b887ff;
+  }
+  #loginPage .footer-text {
+    margin-top: 28px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #a583d4;
+  }
+
+  /* Dashboard */
+  #dashboardPage {
+    display:none;
+    max-width: 420px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    user-select:none;
+  }
+  #dashboardPage.active {
+    display:block;
+  }
+  #dashboardPage header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d0b7ff;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #5b2aa1aa;
+    padding-bottom: 0.3rem;
+    margin-bottom: 24px;
+  }
+  #dashboardPage header svg {
+    width: 28px;
+    height: 28px;
+    fill: #b392ff;
+    cursor: pointer;
+  }
+
+  /* Profile */
+  #profileCard {
+    background: #3d007fcc;
+    border-radius: 20px;
+    padding: 24px 18px;
+    text-align: center;
+    box-shadow: inset 0 0 45px #b185ffbb;
+    user-select:none;
+  }
+  #profileCard img {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    border: 3.5px solid #c9aaff;
+    object-fit: cover;
+    margin-bottom: 14px;
+    box-shadow: 0 0 30px #d6baff;
+  }
+  #profileCard .username {
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    color: #d9baff;
+    text-transform: lowercase;
+    margin-bottom: 6px;
+    user-select:none;
+  }
+  #profileCard .meta {
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    color: #c8a7ffcc;
+  }
+  .role-owner { color: #ff68ce; font-weight: 800;}
+  .role-member { color: #9d99ff; font-weight: 700;}
+  .role-reseller { color: #72d0a7; font-weight: 700;}
+
+  /* Attack form */
+  form#attackForm {
+    background: #450276cc;
+    border-radius: 28px;
+    padding: 25px 20px 28px;
+    box-shadow: inset 0 0 38px #ab7effcc;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  form#attackForm label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #d5b8ff;
+  }
+  form#attackForm input,
+  form#attackForm select {
+    width: 100%;
+    padding: 16px 18px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #e8daff;
+    background: #5f3cbc;
+    border-radius: 20px;
+    border: none;
+    box-shadow: inset 0 0 22px #c5afffcc;
+  }
+  form#attackForm input::placeholder,
+  form#attackForm select option[disabled] {
+    color: #aa8dd0cc;
+  }
+  form#attackForm button {
+    padding: 18px 0;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(90deg,#b875ff,#d69dff);
+    color: #3b0058;
+    font-weight: 900;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 0 35px #ddaaff;
+    user-select:none;
+    transition: background 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+  }
+  form#attackForm button svg {
+    width: 24px;
+    height: 24px;
+    fill: #3b0058;
+  }
+  form#attackForm button:hover:not(:disabled) {
+    background: linear-gradient(90deg,#d69dff,#b875ff);
+  }
+  form#attackForm button:disabled {
+    background: #7a5ba0;
+    color: #b8aadeaa;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+</style>
+</head>
+<body>
+
+<section id="loginPage" role="form" aria-label="Login Form">
+  <img src="https://files.catbox.moe/yjntfu.jpeg" alt="avatar" class="avatar" />
+  <h2>SATRIA APPS V10</h2>
+  <p class="subtitle">Project By Chris Official</p>
+  <input id="usernameInput" type="text" placeholder="Username" autocomplete="username" required aria-required="true" />
+  <input id="passwordInput" type="password" placeholder="Password" autocomplete="current-password" required aria-required="true" />
+  <button id="loginButton">↪ LOGIN</button>
+  <button id="buyKey">Buy Key Access?</button>
+  <p class="copyright">© 2025 Chris Official</p>
+</section>
+
+<section id="dashboardPage" role="main" aria-label="Dashboard" class="hidden">
+  <header>
+    <div></div>
+    <h1>SATRIA V12</h1>
+    <div></div>
+  </header>
+  <article id="profileCard">
+    <img src="https://files.catbox.moe/lm7v0x.jpeg" alt="User photo" />
+    <div class="username" id="profileUsername"></div>
+    <div class="meta">Role: <span id="profileRole"></span> • Exp: <span id="profileExp"></span></div>
+  </article>
+  <form id="attackForm" aria-label="Attack By Chris Official">
+    <label for="targetNumber">TARGET NUMBER</label>
+    <input type="text" id="targetNumber" placeholder="e.g. 628xxxxxxxxxxx" autocomplete="tel" required />
+    <label for="selectBug">SELECT BUG</label>
+    <select id="selectBug" required>
+      <option value="" disabled selected>Select Bug...</option>
+      <option value="/crash1">Crash Andro</option>
+      <option value="/invis">Invis Ios</option>
+      <option value="/blank">Blank Andro</option>
+      <option value="/crahios">Crash Ios</option>
+    </select>
+    <button id="sendBugBtn" type="submit" disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 2v2H6v7l-3 2 3 2v7h6v2h4v-2h5v-7l3-2-3-2v-7h-5V2z" fill="#31004d"/></svg>
+      SEND BUG
+    </button>
+  </form>
+</section>
+
+<script>
+  const USERS_JSON_URL = 'https://raw.githubusercontent.com/CyberAdmin12/databasebug/refs/heads/main/database'; // Ganti link raw file GitHub Anda
+
+  const loginPage = document.getElementById('loginPage');
+  const dashboardPage = document.getElementById('dashboardPage');
+  const usernameInput = document.getElementById('usernameInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginButton = document.getElementById('loginButton');
+  const profileUsername = document.getElementById('profileUsername');
+  const profileRole = document.getElementById('profileRole');
+  const profileExp = document.getElementById('profileExp');
+
+  const attackForm = document.getElementById('attackForm');
+  const targetNumber = document.getElementById('targetNumber');
+  const selectBug = document.getElementById('selectBug');
+  const sendBugBtn = document.getElementById('sendBugBtn');
+
+  let currentUser;
+
+  // Validasi tombol SEND BUG aktif jika input valid
+  function validateInputs() {
+    sendBugBtn.disabled = !(targetNumber.value.trim() && selectBug.value);
+  }
+  targetNumber.addEventListener('input', validateInputs);
+  selectBug.addEventListener('change', validateInputs);
+
+  // Login fungsi
+  loginButton.onclick = async () => {
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!username || !password) {
+      alert('Username dan password harus diisi');
+      return;
+    }
+
+    try {
+      const res = await fetch(USERS_JSON_URL);
+      if (!res.ok) throw new Error('Gagal mengambil data pengguna');
+
+      const data = await res.json();
+      const found = data.users.find(u => u.username.toLowerCase() === username.toLowerCase());
+
+      if (!found) {
+        alert('User tidak ditemukan');
+        return;
+      }
+      if (found.password !== password) {
+        alert('Password salah');
+        return;
+      }
+      if (new Date() > new Date(found.exp)) {
+        alert('Akun sudah kedaluwarsa');
+        return;
+      }
+
+      currentUser = found;
+      loginPage.style.display = 'none';
+      dashboardPage.classList.add('active');
+
+      profileUsername.textContent = currentUser.username;
+      profileRole.textContent = currentUser.role;
+      profileRole.className = 'role-' + currentUser.role.toLowerCase();
+      profileExp.textContent = new Date(currentUser.exp).toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ', ' + new Date(currentUser.exp).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  };
+
+  // Kirim command langsung via Telegram Bot API (tanpa backend)
+  attackForm.onsubmit = async e => {
+    e.preventDefault();
+    const num = targetNumber.value.trim();
+    const bug = selectBug.value;
+
+    if (!num || !bug) {
+      alert('Mohon isi nomor target dan pilih bug.');
+      return;
+    }
+
+    const command = `${bug} ${num}`;
+
+    // Ganti token dan chat_id dengan milik Anda
+    const telegramBotToken = 'YOUR_TELEGRAM_BOT_TOKEN';
+    const chatId = 'YOUR_TELEGRAM_CHAT_ID';
+
+    const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+
+    try {
+      const response = await fetch(telegramUrl, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ chat_id: chatId, text: command })
+      });
+      const data = await response.json();
+      if(data.ok) {
+        alert('Succes Attack Bug:\n' + command);
+        targetNumber.value = '';
+        selectBug.value = '';
+        sendBugBtn.disabled = true;
+      } else {
+        alert('Gagal Attack Bug: ' + JSON.stringify(data));
+      }
+    } catch(err) {
+      alert('Error Attack Bug: ' + err.message);
+    }
+  };
+</script>
+
+</body>
+</html>
+
